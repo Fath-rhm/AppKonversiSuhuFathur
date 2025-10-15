@@ -7,11 +7,7 @@
  *
  * @author ASUS
  */
-import static com.sun.java.accessibility.util.SwingEventMonitor.addDocumentListener;
 import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class KonversiSuhuFrame extends javax.swing.JFrame {
 
@@ -21,9 +17,6 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
     
     public KonversiSuhuFrame() {
         initComponents();
-        setupListeners();
-        setupButtonGroup();
-        clearResults();
     }
     
     
@@ -78,12 +71,20 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField1KeyTyped(evt);
+            }
+        });
 
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Hasil");
 
         jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Celcius ", "Reamur ", "Fahrenheit", "Kelvin", " " }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih satuan suhu", "Celsius ", "Reamur ", "Fahrenheit", "Kelvin" }));
 
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Tipe Konversi");
@@ -98,6 +99,11 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
 
         jRadioButton2.setForeground(new java.awt.Color(0, 0, 0));
         jRadioButton2.setText("Otomatis");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -207,6 +213,11 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
         );
 
         jButton1.setText("Konversi");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jPanel4.setBackground(new java.awt.Color(0, 153, 204));
 
@@ -280,211 +291,120 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private boolean isAutoConvert = false;
-    
+
+    //deklarasi variabel untuk evet jradiobutton
+    boolean isAutoConvert = false;
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
+        isAutoConvert = false;
+        jButton1.setEnabled(true); // aktifkan tombol manual  
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    // Mengelompokkan RadioButton agar hanya satu yang bisa dipilih
-    private void setupButtonGroup() {
-        ButtonGroup group = new ButtonGroup();
-        group.add(jRadioButton1);
-        group.add(jRadioButton2);
-        jRadioButton2.setSelected(true); // Default: Otomatis
-        isAutoConvert = true;
-    }   
-     // Setup semua listener
-    private void setupListeners() {
-        // KeyAdapter untuk membatasi input hanya angka dan titik desimal
-        jTextField1.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                String text = jTextField1.getText();
-                
-                // Izinkan backspace, delete, dan minus di awal
-                if (c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE) {
-                    return;
-                }
-                
-                // Izinkan minus hanya di posisi awal dan jika belum ada minus
-                if (c == '-') {
-                    if (jTextField1.getCaretPosition() != 0 || text.contains("-")) {
-                        e.consume();
-                    }
-                    return;
-                }
-                
-                // Izinkan titik desimal hanya satu kali
-                if (c == '.' || c == ',') {
-                    if (text.contains(".") || text.contains(",")) {
-                        e.consume();
-                    } else {
-                        // Ganti koma dengan titik
-                        if (c == ',') {
-                            e.consume();
-                            int pos = jTextField1.getCaretPosition();
-                            jTextField1.setText(text.substring(0, pos) + "." + text.substring(pos));
-                            jTextField1.setCaretPosition(pos + 1);
-                        }
-                    }
-                    return;
-                }
-                
-                // Hanya izinkan angka
-                if (!Character.isDigit(c)) {
-                    e.consume();
-                }
-            }
-        });
-    
-    
-        // DocumentListener untuk konversi otomatis
-        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (isAutoConvert) {
-                    performConversion();
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (isAutoConvert) {
-                    performConversion();
-                }
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (isAutoConvert) {
-                    performConversion();
-                }
-            }
-        });
-        
-        // ItemListener untuk RadioButton
-        jRadioButton1.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                isAutoConvert = false;
-                JOptionPane.showMessageDialog(this, 
-                    "Mode Manual: Klik tombol 'Konversi' untuk mengkonversi",
-                    "Mode Manual", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-        
-        jRadioButton2.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                isAutoConvert = true;
-                performConversion();
-                JOptionPane.showMessageDialog(this, 
-                    "Mode Otomatis: Konversi akan dilakukan secara otomatis",
-                    "Mode Otomatis", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-        
-        // ItemListener untuk ComboBox
-        jComboBox1.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED && isAutoConvert) {
-                performConversion();
-            }
-        });
-        
-        // ActionListener untuk tombol Konversi
-        jButton1.addActionListener(e -> performConversion());
-    }
-    
-    // Method untuk melakukan konversi
-    private void performConversion() {
-        String input = jTextField1.getText().trim();
-        
-        // Validasi input kosong
-        if (input.isEmpty()) {
-            clearResults();
-            return;
-        }
-        
-        // Validasi input hanya minus
-        if (input.equals("-")) {
-            clearResults();
-            return;
-        }
-        
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
         try {
-            double nilai = Double.parseDouble(input);
-            String skalaAsal = (String) jComboBox1.getSelectedItem();
-            
-            // Hapus spasi di akhir nama skala
-            skalaAsal = skalaAsal.trim();
-            
-            // Konversi berdasarkan skala asal
-            double celsius, fahrenheit, reamur, kelvin;
-            
-            switch (skalaAsal) {
-                case "Celcius":
-                    celsius = nilai;
-                    fahrenheit = (celsius * 9/5) + 32;
-                    reamur = celsius * 4/5;
-                    kelvin = celsius + 273.15;
-                    break;
-                    
-                case "Fahrenheit":
-                    fahrenheit = nilai;
-                    celsius = (fahrenheit - 32) * 5/9;
-                    reamur = (fahrenheit - 32) * 4/9;
-                    kelvin = (fahrenheit - 32) * 5/9 + 273.15;
-                    break;
-                    
-                case "Reamur":
-                    reamur = nilai;
-                    celsius = reamur * 5/4;
-                    fahrenheit = (reamur * 9/4) + 32;
-                    kelvin = (reamur * 5/4) + 273.15;
-                    break;
-                    
-                case "Kelvin":
-                    kelvin = nilai;
-                    celsius = kelvin - 273.15;
-                    fahrenheit = (kelvin - 273.15) * 9/5 + 32;
-                    reamur = (kelvin - 273.15) * 4/5;
-                    break;
-                    
-                default:
-                    clearResults();
-                    return;
-            }
-            
-            // Tampilkan hasil dengan 2 desimal
-            jTextField2.setText(String.format("%.2f", celsius));
-            jTextField3.setText(String.format("%.2f", fahrenheit));
-            jTextField4.setText(String.format("%.2f", reamur));
-            jTextField5.setText(String.format("%.2f", kelvin));
-            
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, 
-                "Input tidak valid! Masukkan angka yang benar.",
-                "Error", JOptionPane.ERROR_MESSAGE);
-            clearResults();
+        // Ambil input dari jTextField1
+        double suhuInput = Double.parseDouble(jTextField1.getText());
+        
+        // Ambil pilihan dari jComboBox1
+        String pilihan = jComboBox1.getSelectedItem().toString().trim();
+        
+        if (pilihan.equals("Pilih satuan suhu")) {
+            JOptionPane.showMessageDialog(this, "Pilih satuan suhu terlebih dahulu!");
+            return;
         }
-    }
-    
-    // Method untuk membersihkan hasil
-    private void clearResults() {
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
+        
+        // Variabel konversi
+        double celsius = 0, fahrenheit = 0, reamur = 0, kelvin = 0;
+        
+        // Konversi berdasarkan pilihan
+        switch (pilihan) {
+            case "Celsius":
+                celsius = suhuInput;
+                fahrenheit = (suhuInput * 9/5) + 32;
+                reamur = suhuInput * 4/5;
+                kelvin = suhuInput + 273.15;
+                break;
+                
+            case "Fahrenheit":
+                celsius = (suhuInput - 32) * 5/9;
+                fahrenheit = suhuInput;
+                reamur = (suhuInput - 32) * 4/9;
+                kelvin = (suhuInput - 32) * 5/9 + 273.15;
+                break;
+                
+            case "Reamur":
+                celsius = suhuInput * 5/4;
+                fahrenheit = (suhuInput * 9/4) + 32;
+                reamur = suhuInput;
+                kelvin = (suhuInput * 5/4) + 273.15;
+                break;
+                
+            case "Kelvin":
+                celsius = suhuInput - 273.15;
+                fahrenheit = (suhuInput - 273.15) * 9/5 + 32;
+                reamur = (suhuInput - 273.15) * 4/5;
+                kelvin = suhuInput;
+                break;
+                
+            default:
+                JOptionPane.showMessageDialog(this, "Pilih satuan suhu terlebih dahulu!");
+                    return;
+        }
+        
+        // Tampilkan hasil ke textfield
+        jTextField2.setText(String.format("%.2f", celsius));
+        jTextField3.setText(String.format("%.2f", fahrenheit));
+        jTextField4.setText(String.format("%.2f", reamur));
+        jTextField5.setText(String.format("%.2f", kelvin));
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Masukkan angka yang valid!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+        isAutoConvert = true;
+        jButton1.setEnabled(false); // nonaktifkan tombol manual
+
+        // langsung konversi jika ada isi di textfield
+        if (!jTextField1.getText().isEmpty()) {
+            jButton1ActionPerformed(null);
+        }
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        // TODO add your handling code here:
+        if (isAutoConvert) {
+        jButton1ActionPerformed(null);
+        }
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        
+        if (!Character.isDigit(c) && c != '\b') {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, " hanya boleh memaskkan angka", " error input", JOptionPane.ERROR_MESSAGE);
+    }                                    
+    }//GEN-LAST:event_jTextField1KeyTyped
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -492,16 +412,22 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(KonversiSuhuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PengkonversiSuhuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PengkonversiSuhuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PengkonversiSuhuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PengkonversiSuhuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
 
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new KonversiSuhuFrame().setVisible(true);
         });
-    
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
