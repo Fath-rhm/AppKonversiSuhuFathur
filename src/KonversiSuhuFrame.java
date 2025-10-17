@@ -30,6 +30,7 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -89,6 +90,7 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Tipe Konversi");
 
+        buttonGroup1.add(jRadioButton1);
         jRadioButton1.setForeground(new java.awt.Color(0, 0, 0));
         jRadioButton1.setText("Manual");
         jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -97,6 +99,7 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(jRadioButton2);
         jRadioButton2.setForeground(new java.awt.Color(0, 0, 0));
         jRadioButton2.setText("Otomatis");
         jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -429,6 +432,7 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
