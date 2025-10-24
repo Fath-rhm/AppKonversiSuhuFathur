@@ -67,11 +67,6 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
         jLabel1.setText("Nilai Suhu:");
 
         jTextField1.setForeground(new java.awt.Color(0, 0, 0));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField1KeyReleased(evt);
@@ -297,18 +292,13 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
 
     //deklarasi variabel untuk evet jradiobutton
     boolean isAutoConvert = false;
+    
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
         isAutoConvert = false;
         jButton1.setEnabled(true); // aktifkan tombol manual  
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         try {
         // Ambil input dari jTextField1
         double suhuInput = Double.parseDouble(jTextField1.getText());
@@ -322,7 +312,7 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
         }
         
         // Variabel konversi
-        double celsius = 0, fahrenheit = 0, reamur = 0, kelvin = 0;
+        double celsius, fahrenheit, reamur, kelvin;
         
         // Konversi berdasarkan pilihan
         switch (pilihan) {
@@ -372,7 +362,6 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
         isAutoConvert = true;
         jButton1.setEnabled(false); // nonaktifkan tombol manual
 
@@ -383,14 +372,12 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
-        // TODO add your handling code here:
         if (isAutoConvert) {
         jButton1ActionPerformed(null);
         }
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
-        // TODO add your handling code here:
         char c = evt.getKeyChar();
         
         if (!Character.isDigit(c) && c != '\b') {
@@ -456,4 +443,3 @@ public class KonversiSuhuFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }
-
